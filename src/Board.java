@@ -1,14 +1,38 @@
+import java.util.ArrayList;
+
 public class Board {
-    private final Cell[][] playingField;
+    private final Cell[][] cells;
     private Color playerColor;
     private Color enemyColor;
+
+    Board() {
+        setPlayerColor(Color.BLACK);
+
+        cells = new Cell[8][8];
+        for (int i = 0; i < 8; ++i) {
+            for (int j = 0; j < 8; ++j) {
+                cells[i][j] = new Cell();
+            }
+        }
+        cells[3][3] = new Cell(Color.WHITE);
+        cells[4][4] = new Cell(Color.WHITE);
+        cells[3][4] = new Cell(Color.BLACK);
+        cells[4][3] = new Cell(Color.BLACK);
+    }
+
+    private static boolean isInBounds(Coords c) {
+        return (c.x() >= 0) && (c.x() <= 7) && (c.y() >= 0) && (c.y() <= 7);
+    }
+
+    public Color getPlayerColor() {
+        return playerColor;
+    }
+
     public void setPlayerColor(Color color) {
         playerColor = color;
         enemyColor = (playerColor == Color.WHITE ? Color.BLACK : Color.WHITE);
     }
-    public Color getPlayerColor() {
-        return playerColor;
-    }
+
     public Color getEnemyColor() {
         return enemyColor;
     }
@@ -16,43 +40,39 @@ public class Board {
     private void findValidMoves() {
         for (int i = 0; i < 8; ++i) {
             for (int j = 0; j < 8; ++j) {
-                if (playingField[i][j].color == Color.WHITE || playingField[i][j].color == Color.BLACK)
-                    continue;
-                if (canCapture(i, j))
-                    playingField[i][j].color = Color.CAN_PLACE;
-                else
-                    playingField[i][j].color = Color.EMPTY;
+                if (cells[i][j].color == Color.WHITE || cells[i][j].color == Color.BLACK) continue;
+                if (canCapture(new Coords(i, j))) cells[i][j].color = Color.CAN_PLACE;
+                else cells[i][j].color = Color.EMPTY;
             }
         }
 
     }
 
-    private boolean canCapture(int i, int j) {
-        if (!isNearEnemyCell(i, j))
-            return false;
-        // TODO check if enemy disks can be captured
-        return true;
-    }
-
-    private boolean isNearEnemyCell(int i, int j) {
-        for (int dx = -1; dx < 2; ++dx) {
-            for (int dy = -1; dy < 2; ++dy) {
-                int new_i = i + dx, new_j = j + dy;
-                if ((dx == 0) && (dy == 0) || !isInBounds(new_i, new_j))
-                    continue;
-                if (i == 2 && j == 2) {
-                    if (playingField[new_i][new_j].color == getEnemyColor())
-                        return true;
-                }
-                if (playingField[new_i][new_j].color == getEnemyColor())
+    private boolean canCapture(Coords c) {
+        ArrayList<Coords> enemySells = findNearEnemySells(c);
+        if (enemySells.isEmpty()) return false;
+        for (Coords e : enemySells) {
+            int dx = e.x() - c.x(), dy = e.y() - c.y();
+            if (dx == 0 && dy == 0) continue;
+            int x_new = c.x(), y_new = c.y();
+            while (isInBounds(new Coords(x_new += dx, y_new += dy))) {
+                if (cells[x_new][y_new].color == getPlayerColor())
                     return true;
             }
         }
         return false;
     }
 
-    private static boolean isInBounds(int x, int y) {
-        return (x >= 0) && (x <= 7) && (y >= 0) && (y <= 7);
+    private ArrayList<Coords> findNearEnemySells(Coords c) {
+        ArrayList<Coords> res = new ArrayList<>();
+        for (int dx : new int[]{-1, 0, 1}) {
+            for (int dy : new int[]{-1, 0, 1}) {
+                int x_new = c.x() + dx, y_new = c.y() + dy;
+                if ((dx == 0) && (dy == 0) || !isInBounds(new Coords(x_new, y_new))) continue;
+                if (cells[x_new][y_new].color == getEnemyColor()) res.add(new Coords(x_new, y_new));
+            }
+        }
+        return res;
     }
 
     public void render() {
@@ -63,7 +83,7 @@ public class Board {
         for (int i = 0; i < 8; ++i) {
             System.out.printf("%d ┃ ", 8 - i);
             for (int j = 0; j < 8; ++j) {
-                System.out.printf("%s%s", playingField[i][j], (j != 7 ? " │ " : " ┃\n"));
+                System.out.printf("%s%s", cells[i][j], (j != 7 ? " │ " : " ┃\n"));
             }
             if (i != 7) {
                 System.out.println("  ┠───┼───┼───┼───┼───┼───┼───┼───┨");
@@ -71,20 +91,5 @@ public class Board {
         }
         System.out.println("  ┗━━━┷━━━┷━━━┷━━━┷━━━┷━━━┷━━━┷━━━┛");
         System.out.println("    a   b   c   d   e   f   g   h  ");
-    }
-
-    Board() {
-        setPlayerColor(Color.BLACK);
-
-        playingField = new Cell[8][8];
-        for (int i = 0; i < 8; ++i) {
-            for (int j = 0; j < 8; ++j) {
-                playingField[i][j] = new Cell();
-            }
-        }
-        playingField[3][3] = new Cell(Color.WHITE);
-        playingField[4][4] = new Cell(Color.WHITE);
-        playingField[3][4] = new Cell(Color.BLACK);
-        playingField[4][3] = new Cell(Color.BLACK);
     }
 }
