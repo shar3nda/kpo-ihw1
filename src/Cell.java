@@ -1,4 +1,4 @@
-public class Cell {
+public final class Cell {
     Color color;
 
     Cell() {

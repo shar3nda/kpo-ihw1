@@ -4,7 +4,7 @@ import java.util.HashSet;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
-public class Board {
+public final class Board {
     private final Cell[][] cells;
     private Color playerColor;
     private Color enemyColor;
@@ -73,13 +73,20 @@ public class Board {
     }
 
     private void capture(Coords newDisk) {
-        ArrayList<Coords> enemySells = findNearEnemySells(newDisk);
+        HashSet<Coords> toFlip = getCaptureList(newDisk);
+        for (Coords disk : toFlip) {
+            flipDisk(disk);
+        }
+    }
+
+    public HashSet<Coords> getCaptureList(Coords attackDisk) {
+        ArrayList<Coords> enemySells = findNearEnemySells(attackDisk);
         HashSet<Coords> toFlip = new HashSet<>();
         for (Coords enemyDisk : enemySells) {
             HashSet<Coords> current = new HashSet<>();
-            int dx = enemyDisk.x() - newDisk.x(), dy = enemyDisk.y() - newDisk.y();
+            int dx = enemyDisk.x() - attackDisk.x(), dy = enemyDisk.y() - attackDisk.y();
             if (dx == 0 && dy == 0) continue;
-            int x_new = newDisk.x(), y_new = newDisk.y();
+            int x_new = attackDisk.x(), y_new = attackDisk.y();
             while (isInBounds(new Coords(x_new += dx, y_new += dy))) {
                 if (cells[x_new][y_new].color == Color.EMPTY || cells[x_new][y_new].color == Color.CAN_PLACE) break;
                 if (cells[x_new][y_new].color == getPlayerColor()) {
@@ -89,9 +96,7 @@ public class Board {
                 current.add(new Coords(x_new, y_new));
             }
         }
-        for (Coords disk : toFlip) {
-            flipDisk(disk);
-        }
+        return toFlip;
     }
 
     public Color getPlayerColor() {
