@@ -4,11 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2e99d265-0bfc-48f9-9d06-10fefd8fae38" name="Changes" comment="implement TUI">
+    <list default="true" id="2e99d265-0bfc-48f9-9d06-10fefd8fae38" name="Changes" comment="implement game mechanics">
       <change afterPath="$PROJECT_DIR$/src/WinnerInfo.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Board.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Board.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Cell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Cell.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Coords.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Coords.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Game.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
     </list>
@@ -85,7 +86,7 @@
       <workItem from="1670070402662" duration="31000" />
       <workItem from="1670070441731" duration="4358000" />
       <workItem from="1670086838020" duration="3063000" />
-      <workItem from="1670150673853" duration="16051000" />
+      <workItem from="1670150673853" duration="16440000" />
     </task>
     <task id="LOCAL-00001" summary="First iteration">
       <created>1670070575091</created>
@@ -115,7 +116,14 @@
       <option name="project" value="LOCAL" />
       <updated>1670171520511</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="implement game mechanics">
+      <created>1670182408805</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1670182408805</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -137,6 +145,7 @@
     <MESSAGE value="???" />
     <MESSAGE value="implement capture check, cleanup code, add Coords.java record" />
     <MESSAGE value="implement TUI" />
-    <option name="LAST_COMMIT_MESSAGE" value="implement TUI" />
+    <MESSAGE value="implement game mechanics" />
+    <option name="LAST_COMMIT_MESSAGE" value="implement game mechanics" />
   </component>
 </project>
