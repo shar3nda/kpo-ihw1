@@ -5,13 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2e99d265-0bfc-48f9-9d06-10fefd8fae38" name="Changes" comment="implement game mechanics">
-      <change afterPath="$PROJECT_DIR$/src/WinnerInfo.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Board.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Board.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Cell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Cell.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Coords.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Coords.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,7 +83,7 @@
       <workItem from="1670070402662" duration="31000" />
       <workItem from="1670070441731" duration="4358000" />
       <workItem from="1670086838020" duration="3063000" />
-      <workItem from="1670150673853" duration="16440000" />
+      <workItem from="1670150673853" duration="23135000" />
     </task>
     <task id="LOCAL-00001" summary="First iteration">
       <created>1670070575091</created>
@@ -123,7 +120,14 @@
       <option name="project" value="LOCAL" />
       <updated>1670182408805</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="implement game mechanics">
+      <created>1670182427843</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1670182427843</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -147,5 +151,12 @@
     <MESSAGE value="implement TUI" />
     <MESSAGE value="implement game mechanics" />
     <option name="LAST_COMMIT_MESSAGE" value="implement game mechanics" />
+  </component>
+  <component name="XDebuggerManager">
+    <watches-manager>
+      <configuration name="Application">
+        <watch expression="boards" language="JAVA" />
+      </configuration>
+    </watches-manager>
   </component>
 </project>

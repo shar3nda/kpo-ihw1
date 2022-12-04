@@ -5,6 +5,15 @@ public class Cell {
         color = Color.EMPTY;
     }
 
+    Cell(Cell cell) {
+        switch (cell.color){
+            case BLACK -> color = Color.BLACK;
+            case WHITE -> color = Color.WHITE;
+            case CAN_PLACE -> color = Color.CAN_PLACE;
+            default -> color = Color.EMPTY;
+        }
+    }
+
     Cell(Color color) {
         this.color = color;
     }

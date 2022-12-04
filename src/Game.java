@@ -1,49 +1,79 @@
+import java.util.Objects;
 import java.util.Scanner;
+import java.util.Stack;
 
 public class Game {
     private static final String UD_COORDS = "87654321", LR_COORDS = "abcdefgh";
-
-    Board board;
-
-    boolean AI;
+    private final boolean AI;
+    private final Stack<Board> boards;
 
     Game(boolean useAI) {
-        board = new Board();
+        boards = new Stack<>();
+        boards.push(new Board());
         AI = useAI;
     }
 
+    private boolean rollback() {
+        if (boards.size() <= 1) return false;
+        boards.pop();
+        return true;
+    }
+
+    private void addBoard(Board board) {
+        this.boards.push(new Board(board));
+    }
+
+    public Board getBoard() {
+        return boards.peek();
+    }
+
     public boolean makeMove() {
-        // TODO implement AI and capturing
-        board.render();
-        System.out.printf("Ход %s!\n", (board.getPlayerColor() == Color.BLACK ? "черных" : "белых"));
-        System.out.println("Введите координаты, на которые хотите поставить фишку (например, d6):");
+        // TODO implement AI
+        Board currentBoard = new Board(getBoard());
+        currentBoard.render();
+        System.out.printf("Ход %s!\n", (currentBoard.getPlayerColor() == Color.BLACK ? "черных" : "белых"));
         Coords disk;
         while (true) {
-            int i = 0;
-            if (board.getValidCells().isEmpty()) {
+            boolean canMakeMove = true;
+            if (currentBoard.getValidCells().isEmpty()) {
                 System.out.println("Невозможно поставить фишку. Ход переходит к следующему игроку.");
-                board.setPlayerColor(board.getEnemyColor());
-                return false;
+                canMakeMove = false;
             }
-            for (Coords cur : board.getValidCells()) {
+            int i = 0;
+            for (Coords cur : currentBoard.getValidCells()) {
                 System.out.printf("%d) %s%s\t", ++i, LR_COORDS.charAt(cur.y()), UD_COORDS.charAt(cur.x()));
             }
+            System.out.println("Введите координаты, на которые хотите поставить фишку (например, d6), или отмените ход, введя u:");
             Scanner sc = new Scanner(System.in);
             String word = sc.next();
+            if (Objects.equals(word, "u")) {
+                if (!rollback()) {
+                    System.out.println("Нельзя отменить ход!");
+                    canMakeMove = false;
+                } else {
+                    return true;
+                }
+            }
+            if (!canMakeMove) {
+                currentBoard.setPlayerColor(currentBoard.getEnemyColor());
+                return false;
+            }
+
             if (word.length() != 2) {
                 System.out.println("Неверный ввод. Попробуйте еще раз");
                 continue;
             }
 
             disk = new Coords(UD_COORDS.indexOf(word.charAt(1)), LR_COORDS.indexOf(word.charAt(0)));
-            if (!Board.isInBounds(disk) || !board.getValidCells().contains(disk)) {
+            if (!Board.isInBounds(disk) || !currentBoard.getValidCells().contains(disk)) {
                 System.out.println("Неверный ввод. Попробуйте еще раз");
                 continue;
             }
             break;
         }
-        board.placeDisk(disk);
-        board.setPlayerColor(board.getEnemyColor());
+        currentBoard.placeDisk(disk);
+        currentBoard.setPlayerColor(currentBoard.getEnemyColor());
+        addBoard(currentBoard);
         return true;
     }
 
@@ -51,7 +81,7 @@ public class Game {
         while (true) {
             if (makeMove()) continue;
             if (makeMove()) continue;
-            WinnerInfo w = board.getBoardInfo();
+            WinnerInfo w = getBoard().getBoardInfo();
             System.out.printf("Игра окончена. Победили %s со счетом %d:%d.\n",
                     w.winnerName(), w.winnerPoints(), w.loserPoints());
             System.out.println("Сыграть еще раз? [y/n]");

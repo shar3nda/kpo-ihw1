@@ -24,6 +24,17 @@ public class Board {
         cells[3][4] = new Cell(Color.BLACK);
         cells[4][3] = new Cell(Color.BLACK);
     }
+    Board(Board other) {
+        cells = new Cell[8][8];
+        for (int i = 0; i < 8; ++i) {
+            for (int j = 0; j < 8; ++j) {
+                cells[i][j] = new Cell(other.cells[i][j]);
+            }
+        }
+        playerColor = other.playerColor;
+        enemyColor = other.enemyColor;
+        validCells = other.validCells;
+    }
 
     public static boolean isInBounds(Coords c) {
         return (c.x() >= 0) && (c.x() <= 7) && (c.y() >= 0) && (c.y() <= 7);
