@@ -4,6 +4,16 @@ public class Board {
     private final Cell[][] cells;
     private Color playerColor;
     private Color enemyColor;
+    private ArrayList<Coords> validCells;
+    public ArrayList<Coords> getValidCells() {
+        return validCells;
+    }
+    public void placeDisk(int x, int y) {
+        if (cells[x][y].color != Color.CAN_PLACE) {
+            throw new IllegalArgumentException("Невозможно поставить фишку в данное место!");
+        }
+        cells[x][y].color = getPlayerColor();
+    }
 
     Board() {
         setPlayerColor(Color.BLACK);
@@ -38,11 +48,16 @@ public class Board {
     }
 
     private void findValidMoves() {
+        validCells = new ArrayList<>();
         for (int i = 0; i < 8; ++i) {
             for (int j = 0; j < 8; ++j) {
                 if (cells[i][j].color == Color.WHITE || cells[i][j].color == Color.BLACK) continue;
-                if (canCapture(new Coords(i, j))) cells[i][j].color = Color.CAN_PLACE;
-                else cells[i][j].color = Color.EMPTY;
+                if (canCapture(new Coords(i, j))) {
+                    cells[i][j].color = Color.CAN_PLACE;
+                    validCells.add(new Coords(i, j));
+                } else {
+                    cells[i][j].color = Color.EMPTY;
+                }
             }
         }
 
@@ -56,8 +71,7 @@ public class Board {
             if (dx == 0 && dy == 0) continue;
             int x_new = c.x(), y_new = c.y();
             while (isInBounds(new Coords(x_new += dx, y_new += dy))) {
-                if (cells[x_new][y_new].color == getPlayerColor())
-                    return true;
+                if (cells[x_new][y_new].color == getPlayerColor()) return true;
             }
         }
         return false;
@@ -78,7 +92,7 @@ public class Board {
     public void render() {
         findValidMoves();
         System.out.println("● - белые, ◯ - черные, ◌ - доступные для хода клетки");
-        System.out.printf("Ход %s!\n", (playerColor == Color.BLACK ? "черных" : "белых"));
+
         System.out.println("  ┏━━━┯━━━┯━━━┯━━━┯━━━┯━━━┯━━━┯━━━┓");
         for (int i = 0; i < 8; ++i) {
             System.out.printf("%d ┃ ", 8 - i);
