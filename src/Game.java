@@ -5,20 +5,28 @@ public class Game {
 
     Board board;
 
-    Game() {
+    boolean AI;
+
+    Game(boolean useAI) {
         board = new Board();
+        AI = useAI;
     }
 
-    public void makeMove() {
+    public boolean makeMove() {
         // TODO implement AI and capturing
-        System.out.printf("Ход %s!\n", (board.getPlayerColor() == Color.BLACK ? "черных" : "белых"));
         board.render();
+        System.out.printf("Ход %s!\n", (board.getPlayerColor() == Color.BLACK ? "черных" : "белых"));
         System.out.println("Введите координаты, на которые хотите поставить фишку (например, d6):");
-        int x, y;
+        Coords disk;
         while (true) {
             int i = 0;
-            for (Coords c : board.getValidCells()) {
-                System.out.printf("%d) %s%s\t", ++i, LR_COORDS.charAt(c.y()), UD_COORDS.charAt(c.x()));
+            if (board.getValidCells().isEmpty()) {
+                System.out.println("Невозможно поставить фишку. Ход переходит к следующему игроку.");
+                board.setPlayerColor(board.getEnemyColor());
+                return false;
+            }
+            for (Coords cur : board.getValidCells()) {
+                System.out.printf("%d) %s%s\t", ++i, LR_COORDS.charAt(cur.y()), UD_COORDS.charAt(cur.x()));
             }
             Scanner sc = new Scanner(System.in);
             String word = sc.next();
@@ -27,21 +35,29 @@ public class Game {
                 continue;
             }
 
-            x = UD_COORDS.indexOf(word.charAt(1));
-            y = LR_COORDS.indexOf(word.charAt(0));
-            if (x == -1 || y == -1 || !board.getValidCells().contains(new Coords(x, y))) {
+            disk = new Coords(UD_COORDS.indexOf(word.charAt(1)), LR_COORDS.indexOf(word.charAt(0)));
+            if (!Board.isInBounds(disk) || !board.getValidCells().contains(disk)) {
                 System.out.println("Неверный ввод. Попробуйте еще раз");
                 continue;
             }
             break;
         }
-        board.placeDisk(x, y);
+        board.placeDisk(disk);
         board.setPlayerColor(board.getEnemyColor());
+        return true;
     }
 
-    public void start() {
+    public boolean start() {
         while (true) {
-            makeMove();
+            if (makeMove()) continue;
+            if (makeMove()) continue;
+            WinnerInfo w = board.getBoardInfo();
+            System.out.printf("Игра окончена. Победили %s со счетом %d:%d.\n",
+                    w.winnerName(), w.winnerPoints(), w.loserPoints());
+            System.out.println("Сыграть еще раз? [y/n]");
+            Scanner sc = new Scanner(System.in);
+            String word = sc.next().toLowerCase();
+            return word.isEmpty() || word.charAt(0) == 'y';
         }
     }
 }

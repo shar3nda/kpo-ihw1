@@ -1,19 +1,14 @@
 import java.util.ArrayList;
+import java.util.HashSet;
+
+import static java.lang.Math.max;
+import static java.lang.Math.min;
 
 public class Board {
     private final Cell[][] cells;
     private Color playerColor;
     private Color enemyColor;
     private ArrayList<Coords> validCells;
-    public ArrayList<Coords> getValidCells() {
-        return validCells;
-    }
-    public void placeDisk(int x, int y) {
-        if (cells[x][y].color != Color.CAN_PLACE) {
-            throw new IllegalArgumentException("Невозможно поставить фишку в данное место!");
-        }
-        cells[x][y].color = getPlayerColor();
-    }
 
     Board() {
         setPlayerColor(Color.BLACK);
@@ -30,8 +25,62 @@ public class Board {
         cells[4][3] = new Cell(Color.BLACK);
     }
 
-    private static boolean isInBounds(Coords c) {
+    public static boolean isInBounds(Coords c) {
         return (c.x() >= 0) && (c.x() <= 7) && (c.y() >= 0) && (c.y() <= 7);
+    }
+
+    public WinnerInfo getBoardInfo() {
+        int blackCount = 0;
+        int whiteCount = 0;
+        for (Cell[] row : cells) {
+            for (Cell cell : row) {
+                if (cell.color == Color.WHITE)
+                    ++whiteCount;
+                else if (cell.color == Color.BLACK)
+                    ++blackCount;
+            }
+        }
+        return new WinnerInfo(whiteCount > blackCount ? "белые" : "черные",
+                max(whiteCount, blackCount),
+                min(whiteCount, blackCount));
+    }
+
+    public ArrayList<Coords> getValidCells() {
+        return validCells;
+    }
+
+    private void flipDisk(Coords c) {
+        cells[c.x()][c.y()].flipColor();
+    }
+
+    public void placeDisk(Coords c) {
+        if (cells[c.x()][c.y()].color != Color.CAN_PLACE) {
+            throw new IllegalArgumentException("Невозможно поставить фишку в данное место!");
+        }
+        cells[c.x()][c.y()].color = getPlayerColor();
+        capture(c);
+    }
+
+    private void capture(Coords newDisk) {
+        ArrayList<Coords> enemySells = findNearEnemySells(newDisk);
+        HashSet<Coords> toFlip = new HashSet<>();
+        for (Coords enemyDisk : enemySells) {
+            HashSet<Coords> current = new HashSet<>();
+            int dx = enemyDisk.x() - newDisk.x(), dy = enemyDisk.y() - newDisk.y();
+            if (dx == 0 && dy == 0) continue;
+            int x_new = newDisk.x(), y_new = newDisk.y();
+            while (isInBounds(new Coords(x_new += dx, y_new += dy))) {
+                if (cells[x_new][y_new].color == Color.EMPTY || cells[x_new][y_new].color == Color.CAN_PLACE) break;
+                if (cells[x_new][y_new].color == getPlayerColor()) {
+                    toFlip.addAll(current);
+                    break;
+                }
+                current.add(new Coords(x_new, y_new));
+            }
+        }
+        for (Coords disk : toFlip) {
+            flipDisk(disk);
+        }
     }
 
     public Color getPlayerColor() {
@@ -71,6 +120,7 @@ public class Board {
             if (dx == 0 && dy == 0) continue;
             int x_new = c.x(), y_new = c.y();
             while (isInBounds(new Coords(x_new += dx, y_new += dy))) {
+                if (cells[x_new][y_new].color == Color.EMPTY || cells[x_new][y_new].color == Color.CAN_PLACE) break;
                 if (cells[x_new][y_new].color == getPlayerColor()) return true;
             }
         }
@@ -91,7 +141,7 @@ public class Board {
 
     public void render() {
         findValidMoves();
-        System.out.println("● - белые, ◯ - черные, ◌ - доступные для хода клетки");
+        System.out.println("● - белые, ◯ - черные, × - доступные для хода клетки");
 
         System.out.println("  ┏━━━┯━━━┯━━━┯━━━┯━━━┯━━━┯━━━┯━━━┓");
         for (int i = 0; i < 8; ++i) {
