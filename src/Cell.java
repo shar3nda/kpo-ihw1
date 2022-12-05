@@ -6,12 +6,12 @@ public final class Cell {
     }
 
     Cell(Cell cell) {
-        switch (cell.color){
-            case BLACK -> color = Color.BLACK;
-            case WHITE -> color = Color.WHITE;
-            case CAN_PLACE -> color = Color.CAN_PLACE;
-            default -> color = Color.EMPTY;
-        }
+        color = switch (cell.color) {
+            case BLACK -> Color.BLACK;
+            case WHITE -> Color.WHITE;
+            case CAN_PLACE -> Color.CAN_PLACE;
+            default -> Color.EMPTY;
+        };
     }
 
     Cell(Color color) {
@@ -19,20 +19,20 @@ public final class Cell {
     }
 
     void flipColor() {
-        if (color == Color.WHITE)
+        if (color == Color.WHITE) {
             color = Color.BLACK;
-        else if (color == Color.BLACK)
+        } else if (color == Color.BLACK) {
             color = Color.WHITE;
+        }
     }
 
     @Override
     public String toString() {
-        if (color == Color.BLACK)
-            return "◯";
-        else if (color == Color.WHITE)
-            return "●";
-        else if (color == Color.CAN_PLACE)
-            return "×";
-        return " ";
+        return switch (color) {
+            case BLACK -> "◯";
+            case WHITE -> "●";
+            case CAN_PLACE -> "×";
+            default -> " ";
+        };
     }
 }

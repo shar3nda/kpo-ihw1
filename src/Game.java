@@ -5,24 +5,24 @@ import java.util.Stack;
 
 public final class Game {
     private static final String UD_COORDS = "87654321", LR_COORDS = "abcdefgh";
-    private final boolean useAI;
     private final Stack<Board> boards;
     private final HumanPlayer humanPlayer;
-    private AIPlayer aiPlayer;
+    private final AIPlayer aiPlayer;
+    public int bestScore;
+    private boolean useAI;
 
-    Game(boolean useAI) {
+    Game() {
         boards = new Stack<>();
         boards.push(new Board());
-
+        bestScore = 0;
         humanPlayer = new HumanPlayer();
-        this.useAI = useAI;
-        if (this.useAI) {
-            aiPlayer = new AIPlayer();
-        }
+        aiPlayer = new AIPlayer();
     }
 
     private boolean rollback() {
-        if (boards.size() <= 1) return false;
+        if (boards.size() <= 1) {
+            return false;
+        }
         boards.pop();
         return true;
     }
@@ -39,18 +39,31 @@ public final class Game {
         Board currentBoard = new Board(getBoard());
         currentBoard.render();
         System.out.printf("Ход %s!\n", (currentBoard.getPlayerColor() == Color.BLACK ? "черных" : "белых"));
-        boolean moveAvailable;
-        if (getBoard().getPlayerColor() == Color.WHITE || !useAI) moveAvailable = humanPlayer.makeMove(currentBoard);
-        else moveAvailable = aiPlayer.makeMove(currentBoard);
-        return moveAvailable;
+        if (getBoard().getPlayerColor() == Color.BLACK || !useAI) {
+            return humanPlayer.makeMove(currentBoard);
+        } else {
+            return aiPlayer.makeMove(currentBoard);
+        }
     }
 
-    public boolean start() {
+    public boolean start(boolean useAI) {
+        this.useAI = useAI;
         while (true) {
-            if (makeMove()) continue;
-            if (makeMove()) continue;
+            if (makeMove()) {
+                continue;
+            }
+            if (makeMove()) {
+                continue;
+            }
+            getBoard().render();
             WinnerInfo w = getBoard().getBoardInfo();
-            System.out.printf("Игра окончена. Победили %s со счетом %d:%d.\n", w.winnerName(), w.winnerPoints(), w.loserPoints());
+            System.out.printf("Игра окончена. Победили %s со счетом %d:%d.\n",
+                    w.winnerColor() == Color.BLACK ? "черные" : "белые", w.winnerPoints(), w.loserPoints());
+            if (useAI && w.winnerColor() == Color.WHITE) {
+                bestScore = w.loserPoints();
+            } else {
+                bestScore = w.winnerPoints();
+            }
             System.out.println("Сыграть еще раз? [y/n]");
             Scanner sc = new Scanner(System.in);
             String word = sc.next().toLowerCase();
@@ -76,11 +89,14 @@ public final class Game {
                 for (Coords cur : currentBoard.getValidCells()) {
                     System.out.printf("%d) %s%s\t", ++i, LR_COORDS.charAt(cur.y()), UD_COORDS.charAt(cur.x()));
                 }
-                System.out.println("Введите координаты, на которые хотите поставить фишку (например, d6), или отмените ход, введя u:");
+                System.out.println("Введите координаты, на которые хотите поставить фишку (например, d6), " +
+                        "или отмените ход, введя u:");
                 Scanner sc = new Scanner(System.in);
                 String word = sc.next();
                 if (Objects.equals(word, "u")) {
-                    if (useAI) rollback();
+                    if (useAI) {
+                        rollback();
+                    }
                     if (!rollback()) {
                         System.out.println("Нельзя отменить ход!");
                         canMakeMove = false;
@@ -122,13 +138,19 @@ public final class Game {
         }
 
         private double getSi(Coords c) {
-            if (isEdgeCell(c)) return 2;
+            if (isEdgeCell(c)) {
+                return 2;
+            }
             return 1;
         }
 
         private double getSS(Coords c) {
-            if (isEdgeCell(c)) return 0.8;
-            if (isCornerCell(c)) return 0.4;
+            if (isEdgeCell(c)) {
+                return 0.8;
+            }
+            if (isCornerCell(c)) {
+                return 0.4;
+            }
             return 0;
         }
 

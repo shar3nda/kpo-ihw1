@@ -4,12 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2e99d265-0bfc-48f9-9d06-10fefd8fae38" name="Changes" comment="implement undo">
-      <change afterPath="$PROJECT_DIR$/src/AI.java" afterDir="false" />
+    <list default="true" id="2e99d265-0bfc-48f9-9d06-10fefd8fae38" name="Changes" comment="implement AI">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Board.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Board.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Cell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Cell.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Game.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/WinnerInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/WinnerInfo.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,6 +31,9 @@
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectId" id="2IMQ4KagzbQsKzrrogTRRgcXo6b" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -84,7 +88,7 @@
       <workItem from="1670070402662" duration="31000" />
       <workItem from="1670070441731" duration="4358000" />
       <workItem from="1670086838020" duration="3063000" />
-      <workItem from="1670150673853" duration="27457000" />
+      <workItem from="1670150673853" duration="30151000" />
     </task>
     <task id="LOCAL-00001" summary="First iteration">
       <created>1670070575091</created>
@@ -135,7 +139,14 @@
       <option name="project" value="LOCAL" />
       <updated>1670191994101</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="implement AI">
+      <created>1670196225373</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1670196225373</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -159,7 +170,8 @@
     <MESSAGE value="implement TUI" />
     <MESSAGE value="implement game mechanics" />
     <MESSAGE value="implement undo" />
-    <option name="LAST_COMMIT_MESSAGE" value="implement undo" />
+    <MESSAGE value="implement AI" />
+    <option name="LAST_COMMIT_MESSAGE" value="implement AI" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>

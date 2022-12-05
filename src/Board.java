@@ -24,6 +24,7 @@ public final class Board {
         cells[3][4] = new Cell(Color.BLACK);
         cells[4][3] = new Cell(Color.BLACK);
     }
+
     Board(Board other) {
         cells = new Cell[8][8];
         for (int i = 0; i < 8; ++i) {
@@ -45,13 +46,14 @@ public final class Board {
         int whiteCount = 0;
         for (Cell[] row : cells) {
             for (Cell cell : row) {
-                if (cell.color == Color.WHITE)
+                if (cell.color == Color.WHITE) {
                     ++whiteCount;
-                else if (cell.color == Color.BLACK)
+                } else if (cell.color == Color.BLACK) {
                     ++blackCount;
+                }
             }
         }
-        return new WinnerInfo(whiteCount > blackCount ? "белые" : "черные",
+        return new WinnerInfo(whiteCount > blackCount ? Color.WHITE : Color.BLACK,
                 max(whiteCount, blackCount),
                 min(whiteCount, blackCount));
     }
@@ -85,10 +87,14 @@ public final class Board {
         for (Coords enemyDisk : enemySells) {
             HashSet<Coords> current = new HashSet<>();
             int dx = enemyDisk.x() - attackDisk.x(), dy = enemyDisk.y() - attackDisk.y();
-            if (dx == 0 && dy == 0) continue;
+            if (dx == 0 && dy == 0) {
+                continue;
+            }
             int x_new = attackDisk.x(), y_new = attackDisk.y();
             while (isInBounds(new Coords(x_new += dx, y_new += dy))) {
-                if (cells[x_new][y_new].color == Color.EMPTY || cells[x_new][y_new].color == Color.CAN_PLACE) break;
+                if (cells[x_new][y_new].color == Color.EMPTY || cells[x_new][y_new].color == Color.CAN_PLACE) {
+                    break;
+                }
                 if (cells[x_new][y_new].color == getPlayerColor()) {
                     toFlip.addAll(current);
                     break;
@@ -116,7 +122,9 @@ public final class Board {
         validCells = new ArrayList<>();
         for (int i = 0; i < 8; ++i) {
             for (int j = 0; j < 8; ++j) {
-                if (cells[i][j].color == Color.WHITE || cells[i][j].color == Color.BLACK) continue;
+                if (cells[i][j].color == Color.WHITE || cells[i][j].color == Color.BLACK) {
+                    continue;
+                }
                 if (canCapture(new Coords(i, j))) {
                     cells[i][j].color = Color.CAN_PLACE;
                     validCells.add(new Coords(i, j));
@@ -130,14 +138,22 @@ public final class Board {
 
     private boolean canCapture(Coords c) {
         ArrayList<Coords> enemySells = findNearEnemySells(c);
-        if (enemySells.isEmpty()) return false;
+        if (enemySells.isEmpty()) {
+            return false;
+        }
         for (Coords e : enemySells) {
             int dx = e.x() - c.x(), dy = e.y() - c.y();
-            if (dx == 0 && dy == 0) continue;
+            if (dx == 0 && dy == 0) {
+                continue;
+            }
             int x_new = c.x(), y_new = c.y();
             while (isInBounds(new Coords(x_new += dx, y_new += dy))) {
-                if (cells[x_new][y_new].color == Color.EMPTY || cells[x_new][y_new].color == Color.CAN_PLACE) break;
-                if (cells[x_new][y_new].color == getPlayerColor()) return true;
+                if (cells[x_new][y_new].color == Color.EMPTY || cells[x_new][y_new].color == Color.CAN_PLACE) {
+                    break;
+                }
+                if (cells[x_new][y_new].color == getPlayerColor()) {
+                    return true;
+                }
             }
         }
         return false;
@@ -148,8 +164,12 @@ public final class Board {
         for (int dx : new int[]{-1, 0, 1}) {
             for (int dy : new int[]{-1, 0, 1}) {
                 int x_new = c.x() + dx, y_new = c.y() + dy;
-                if ((dx == 0) && (dy == 0) || !isInBounds(new Coords(x_new, y_new))) continue;
-                if (cells[x_new][y_new].color == getEnemyColor()) res.add(new Coords(x_new, y_new));
+                if ((dx == 0) && (dy == 0) || !isInBounds(new Coords(x_new, y_new))) {
+                    continue;
+                }
+                if (cells[x_new][y_new].color == getEnemyColor()) {
+                    res.add(new Coords(x_new, y_new));
+                }
             }
         }
         return res;
