@@ -176,6 +176,9 @@ public final class Board {
     }
 
     public void render() {
+        System.out.println();
+        System.out.println();
+        System.out.println();
         findValidMoves();
         System.out.println("● - белые, ◯ - черные, × - доступные для хода клетки");
 

@@ -106,6 +106,8 @@ public final class Game {
                 }
                 if (!canMakeMove) {
                     currentBoard.setPlayerColor(currentBoard.getEnemyColor());
+                    rollback();
+                    addBoard(currentBoard);
                     return false;
                 }
 
@@ -168,6 +170,8 @@ public final class Game {
             if (currentBoard.getValidCells().isEmpty()) {
                 System.out.println("Невозможно поставить фишку. Ход переходит к следующему игроку.");
                 currentBoard.setPlayerColor(currentBoard.getEnemyColor());
+                rollback();
+                addBoard(currentBoard);
                 return false;
             }
             double R = -1;
@@ -181,8 +185,10 @@ public final class Game {
             }
             if (bestCell == null) {
                 System.out.println("Невозможно поставить фишку. Ход переходит к следующему игроку.");
+                currentBoard.setPlayerColor(currentBoard.getEnemyColor());
                 return false;
             }
+            System.out.printf("Компьютер ходит %s%s\n", LR_COORDS.charAt(bestCell.y()), UD_COORDS.charAt(bestCell.x()));
             currentBoard.placeDisk(bestCell);
             currentBoard.setPlayerColor(currentBoard.getEnemyColor());
             addBoard(currentBoard);
